@@ -1,26 +1,37 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <h1>Homelab Scheduler</h1>
+    <reservation-form @reservation-created="fetchReservations"></reservation-form>
+    <reservation-list :reservations="reservations" @status-updated="fetchReservations"></reservation-list>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ReservationForm from './components/ReservationForm.vue';
+import ReservationList from './components/ReservationList.vue';
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    ReservationForm,
+    ReservationList
+  },
+  data() {
+    return {
+      reservations: []
+    };
+  },
+  methods: {
+    fetchReservations() {
+      fetch('http://localhost:5010/api/reservations')
+        .then(response => response.json())
+        .then(data => {
+          this.reservations = data;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+  },
+  mounted() {
+    this.fetchReservations();
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
