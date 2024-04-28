@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-for="reservation in reservations" :key="reservation.id">
-      {{ reservation.user_id }} - {{ reservation.resource_id }} - {{ reservation.start_time }} - {{ reservation.end_time }} - Status: {{ reservation.status }}
+      {{ reservation.user_id }} - {{ reservation.resource_id }} - {{ formattedDateTime(reservation.start_time) }} - {{ formattedDateTime(reservation.end_time) }} - Status: {{ reservation.status }}
       <button @click="updateStatus(reservation.id, 'completed')">Complete</button>
       <button @click="updateStatus(reservation.id, 'cancelled')">Cancel</button>
     </li>
@@ -29,7 +29,24 @@ export default {
         alert('Status Updated');
       })
       .catch(error => console.error('Error:', error));
-    }
+    },
+    formattedDateTime(dateTime) {
+      const date = new Date(dateTime);
+      // Adjust for Jakarta time zone (UTC+7)
+      date.setHours(date.getHours() + 7);
+
+      const options = {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        timeZone: 'Asia/Jakarta', // Jakarta time zone
+      };
+
+      return new Intl.DateTimeFormat('en-ID', options).format(date);
+    },
   }
 }
 </script>
