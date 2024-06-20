@@ -18,7 +18,7 @@
                 <label for="end_date">End Date:</label>
                 <input type="date" id="end_date" v-model="reservation.end_date" required class="form-input">
             </div>
-            <button type="submit" class="form-button">Create Reservation</button>
+            <button type="submit" class="form-button" :disabled="isLoading">Create Reservation</button>
             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
         </form>
     </div>
@@ -35,6 +35,7 @@
                     end_date: ''
                 },
                 errorMessage: '',
+                isLoading: false,  // New loading state property
             };
         },
         methods: {
@@ -90,7 +91,9 @@
                     password: password
                 };
 
-                fetch('http://10.10.1.247:5010/api/reservations', {
+                this.isLoading = true;  // Disable the button
+
+                fetch('https://backend.testbed-itb.my.id/api/reservations', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -99,6 +102,8 @@
                 })
                     .then(response => response.json())
                     .then(data => {
+                        this.isLoading = false;  // Enable the button
+
                         if (data.error) {
                             this.errorMessage = data.error;
                         } else {
@@ -110,12 +115,12 @@
                     .catch(error => {
                         console.error('Error:', error);
                         this.errorMessage = 'Failed to connect to the service';
+                        this.isLoading = false;  // Enable the button in case of error
                     });
             }
         }
     }
 </script>
-
 
 <style scoped>
     .reservation-form {
@@ -150,9 +155,14 @@
         margin-top: 10px;
     }
 
-        .form-button:hover {
-            background-color: lightcoral;
-        }
+    .form-button:hover {
+        background-color: lightcoral;
+    }
+
+    .form-button:disabled {
+        background-color: #ddd;
+        cursor: not-allowed;
+    }
 
     .error-message {
         color: red;

@@ -25,7 +25,7 @@
         },
         methods: {
             fetchReservations() {
-                fetch('http://10.10.1.247:5010/api/reservations')
+                fetch('https://backend.testbed-itb.my.id/api/reservations')
                     .then(response => response.json())
                     .then(data => {
                         this.reservations = data;

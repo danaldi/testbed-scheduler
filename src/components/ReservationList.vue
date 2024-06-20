@@ -38,7 +38,7 @@
         },
         methods: {
             updateStatus(reservationId, status) {
-                fetch(`http://10.10.1.247:5010/api/reservations/${reservationId}/status`, {
+                fetch(`https://backend.testbed-itb.my.id/api/reservations/${reservationId}/status`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
